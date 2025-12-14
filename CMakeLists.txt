@@ -249,27 +249,18 @@ endif()
 
 find_package(BLAS REQUIRED)
 
-# On Windows use LAPACK (vcpkg provides lapack even if package is named clapack)
-if(WIN32)
-    find_package(LAPACK QUIET)
-    if(LAPACK_FOUND)
-        message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
-        message(STATUS "Found LAPACK library:     ${LAPACK_LIBRARIES}")
-    else()
-        message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
-        message(STATUS "LAPACK not found - using BLAS only")
-        set(LAPACK_LIBRARIES ${BLAS_LIBRARIES})
-    endif()
+# Try to find LAPACK - OpenBLAS includes LAPACK so it may be found there
+find_package(LAPACK QUIET)
+
+if(LAPACK_FOUND)
+    message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
+    message(STATUS "Found LAPACK library:     ${LAPACK_LIBRARIES}")
 else()
-    find_package(LAPACK QUIET)
-    if(LAPACK_FOUND)
-        message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
-        message(STATUS "Found LAPACK library:     ${LAPACK_LIBRARIES}")
-    else()
-        message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
-        message(STATUS "LAPACK not found - using BLAS only")
-        set(LAPACK_LIBRARIES ${BLAS_LIBRARIES})
-    endif()
+    # OpenBLAS includes LAPACK but FindLAPACK might not detect it
+    # Use BLAS libraries which include LAPACK functionality
+    message(STATUS "Found BLAS library:       ${BLAS_LIBRARIES}")
+    message(STATUS "LAPACK not found separately - assuming BLAS includes LAPACK (OpenBLAS)")
+    set(LAPACK_LIBRARIES ${BLAS_LIBRARIES})
 endif()
 
 if (YAML_CPP_LIB)
@@ -318,7 +309,7 @@ add_custom_target(updateGit ALL
 
 # Make sure it regenerates every time the project is built
 
-link_directories(/usr/lib64 ${CMAKE_BINARY_DIR}/../../lib)
+link_directories(/usr/lib64 ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 # CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cpp/pea/peaCommitVersion.h.in ${CMAKE_CURRENT_SOURCE_DIR}/cpp/pea/peaCommitVersion.h @ONLY)
 
