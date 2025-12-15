@@ -5,11 +5,5 @@ An intelligent and user-friendly interface for using the Geoscience Australia GN
 [User manual available here](./docs/USER_GUIDE.md)
 
 ## Installation
-### From Source
-Tested with python 3.9+
-```
-Navigate to the root of the Ginan repository:
-cd /ginan
-pip install -r scripts/GinanUI/requirements.txt
-python -m scripts.GinanUI.main
-```
+
+Please read the user manual above for installation instructions.

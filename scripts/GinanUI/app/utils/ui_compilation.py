@@ -37,7 +37,10 @@ def compile_ui():
     # Manually fix the file path to the logo resource
     with open(output_file, 'r') as f:
         lines = f.readlines()
-    lines[23] = "from scripts.GinanUI.app.resources import ginan_logo_rc"
+        for i, line in enumerate(lines):
+            if line == "import ginan_logo_rc\n":
+                lines[i] = "from scripts.GinanUI.app.resources import ginan_logo_rc"
+                break
     with open(output_file, 'w') as f:
         f.writelines(lines)
 

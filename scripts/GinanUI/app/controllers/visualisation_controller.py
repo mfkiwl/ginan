@@ -70,6 +70,7 @@ class VisualisationController(QObject):
         self.current_index: Optional[int] = None
         self.external_base_url: Optional[str] = None
         self._selector: Optional[QComboBox] = None
+        self._open_button: Optional[QPushButton] = None
 
     # ---------------------------------------------------------------------
     # Public API (to be called from MainWindow / other controllers)
@@ -93,6 +94,17 @@ class VisualisationController(QObject):
             self._refresh_selector()
         if self.html_files:
             self.display_html(0)
+            # Enable widgets once we have plots
+            if self._selector:
+                self._selector.setEnabled(True)
+            if self._open_button:
+                self._open_button.setEnabled(True)
+        else:
+            # Disable widgets if no plots available
+            if self._selector:
+                self._selector.setEnabled(False)
+            if self._open_button:
+                self._open_button.setEnabled(False)
 
     def display_html(self, index: int):
         """
@@ -164,7 +176,9 @@ class VisualisationController(QObject):
           >>> controller.bind_open_button(ui.openButton) is None
           True
         """
+        self._open_button = button
         button.clicked.connect(self.open_current_external)
+        button.setEnabled(False)
 
     def bind_selector(self, combo: QComboBox):
         """
@@ -186,6 +200,7 @@ class VisualisationController(QObject):
                 self.display_html(data)
 
         combo.currentIndexChanged.connect(lambda _: safe_display())
+        combo.setEnabled(False)
         self._refresh_selector()
 
     def _refresh_selector(self):

@@ -1077,7 +1077,7 @@ class InputController(QObject):
         """
         UI handler: reload config, apply UI values, write changes, then open the YAML.
         """
-        Logger.terminal("opening config file...")
+        Logger.terminal("📄 Opening YAML configuration file...")
         # Reload disk version before overwriting with GUI changes
         self.execution.reload_config()
         inputs = self.extract_ui_values(self.rnx_file)

@@ -85,13 +85,10 @@ class MainWindow(QMainWindow):
         self.offline_mode = False  # Track if running without internet
 
         # Visualisation widgets
-        self.openInBrowserBtn = QPushButton("Open in Browser", self)
-        self.ui.rightLayout.addWidget(self.openInBrowserBtn)
-        self.visCtrl.bind_open_button(self.openInBrowserBtn)
 
-        self.visSelector = QComboBox(self)
-        self.ui.rightLayout.addWidget(self.visSelector)
-        self.visCtrl.bind_selector(self.visSelector)
+        self.visCtrl.bind_open_button(self.ui.openInBrowserBtn)
+
+        self.visCtrl.bind_selector(self.ui.visSelector)
 
         archive_products(INPUT_PRODUCTS_PATH, "startup_archival", True)
 
